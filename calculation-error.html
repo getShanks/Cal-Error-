@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculation Error for Calibration</title>
+    <style>
+        body {font-family: Arial, sans-serif; padding:20px; background:#f7f7f7;}
+        h1 {text-align:center; color:#2c3e50;}
+        .container {max-width:500px; margin:auto; background:#fff; padding:20px; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,.1);}
+        label {display:block; margin-top:15px; font-weight:bold;}
+        input {width:100%; padding:10px; margin-top:5px; font-size:1rem; border:1px solid #ccc; border-radius:4px;}
+        button {margin-top:25px; width:100%; padding:12px; font-size:1.1rem; background:#27ae60; color:#fff; border:none; border-radius:4px; cursor:pointer;}
+        button:hover {background:#219150;}
+        .result {margin-top:20px; padding:15px; background:#ecf0f1; border-radius:4px; font-size:1.1rem;}
+        .result span {font-weight:bold; color:#2980b9;}
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Calculation Error for Calibration</h1>
+
+    <label for="ref">Reference (Master) Reading</label>
+    <input type="number" id="ref" step="any" placeholder="e.g. 3001" required>
+
+    <label for="meter">Meter Reading</label>
+    <input type="number" id="meter" step="any" placeholder="e.g. 3000" required>
+
+    <button onclick="calculate()">Calculate Error</button>
+
+    <div class="result" id="output" style="display:none;">
+        <p>Absolute error: <span id="absErr"></span></p>
+        <p>Percent error: <span id="percErr"></span>%</p>
+        <p><small>Formula: ((0.0005 × Ref) + Meter) – Ref → % = (error/Ref)×100</small></p>
+    </div>
+</div>
+
+<script>
+function calculate() {
+    const ref   = parseFloat(document.getElementById('ref').value);
+    const meter = parseFloat(document.getElementById('meter').value);
+
+    if (isNaN(ref) || isNaN(meter) || ref === 0) {
+        alert('Please enter valid numbers (reference ≠ 0).');
+        return;
+    }
+
+    // Step-by-step as you described
+    const step1 = 0.0005 * ref;               // 0.0005 × reference
+    const step2 = step1 + meter;              // + meter reading
+    const error = step2 - ref;                // minus reference
+    const percentError = (error / ref) * 100; // divide by reference × 100
+
+    // Show results with 6 decimal places (you can change if needed)
+    document.getElementById('absErr').textContent = error.toFixed(6);
+    document.getElementById('percErr').textContent = percentError.toFixed(6);
+
+    document.getElementById('output').style.display = 'block';
+}
+</script>
+
+</body>
+</html>
